@@ -1,0 +1,51 @@
+This file is for the instruction to launch the Bowling game app and some notes.
+
+
+
+1. You need to have either Spring tool suit or Eclipse to run the application(Prefer STS), intellij should work too, but I have no experience using spring boot application in intellij.
+In case here is the link for downloading sts for free: http://dist.springsource.com/release/STS/index.html.
+If you have Eclipse, you will need to install spring pluin or whatever.
+
+2. Launch STS, go to File->Import, under General, select Existing Projects into Workspace. Select the second option - Select archive file, then Browse, pick the zip file I shared.then next(finish).
+
+3. Once the project is imported, you may want to wait for some time(until you don't see any red cross error), since STS need to download the Maven Depandencies for the project. If this never happen, I know there are steps to manually install the maven Dependencies, just search online.
+
+4.If the project has no red cross(erros), then we good. right click on the Project name,select Run As->Spring Boot App.
+under your STS console, if you see "Started BowlingScoreApplication in 2.9 seconds (JVM running for 3.559)", that means the app is up and running now.
+
+5. In your Browser(I use Chrome and Safari), navigate to  http://localhost:8080/. 
+You should see the home page of this application.
+
+
+------------------------------
+Now we can start using the app, and testing it.
+
+I tried my best to understand the README file, so for this app, only these are valid input:
+Strike(10 pins knocked down in the 1st try of each frame),Spare(knock down all remaining pins in the 2nd try of each frame),
+Miss(0 pin knocked down in any try of each frame), and any number less than 10.
+
+you can input multiple rolls in one input, for example in the README:
+Strike, 7, Spare, 9, Miss, Strike, Miss, 8
+the above will be consider valid input,as long as to use comma to seperate each try.
+Also, you can end your input without finish the current frame, for example:
+game start, you input 3, then submit, next time, you input 6,3
+6 will be record will the previous 3 together as the 1st frame.
+
+After 10 frames are done, you should not be able to submit any input.
+
+
+Here are some Bugs I can see in the app:
+1. in the file FrameService.java, the validation function ,lines(287,309,216,etc), whenever the code is doing compartion 
+with inp1's length with 0, it causes a bug. Line 309 for example, in the app, if you enter a number greater than 4 for the first roll of a frame, you will get the error message, but the record is still being accepted. The rest, same thing, error message show still while the records are accepted. I tried to replace the condition with inp1.isEmpty, or swithc the if and else, still same thing. So I gave up for now. 
+
+
+2. At Frame 10, bonus roll can not enter as "Strike" or "Spare", only number less than 10 can be enter(I don't get the rules completly).
+
+3. I just realized if you enter "Strike, 7, Spare, 9, Miss, Strike, Miss, 8, 8, Spare, Miss, 6, Strike, Strike, Strike, 8, 1",
+in the beginning, you will encounter a bug, which you are in Frame 11 with 1 roll left. Cuz the bonus roll goes to Frame 11.
+You can also encounter this bug if you input Frame 9 - 10 at once.
+
+PS: I just found out for Frame 10, A Strike is follow by two tries(Strike,8,1). Which I did not know it's the rule, so my code run this as bug.
+Rule:  If all ten pins are knocked down in those two turns in the 10th frame, an extra bonus chance is awarded.
+I thought the extra Bonus is one try.
+--------------------------------
